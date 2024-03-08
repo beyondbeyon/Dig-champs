@@ -5,22 +5,22 @@ class Title extends Phaser.Scene {
 
     preload() {
         this.load.bitmapFont('8-bit', 'assets/fonts/pixel.png', 'assets/fonts/pixel.xml');
-        this.load.atlas('player_2', 'assets/Pickaxe.png' ,'assets/Pickaxe.json');
-        this.load.atlas('player_1', 'assets/Shovel.png', 'assets/Shovel.json');
-        this.load.atlas('Worm', 'assets/Worm.png', 'assets/Worm.json');
-        this.load.atlas('Snail', 'assets/Snail.png', 'assets/Snail.json');
+        this.load.atlas('player_2', 'assets/sprites/Pickaxe.png' ,'assets/sprites/Pickaxe.json');
+        this.load.atlas('player_1', 'assets/sprites/Shovel.png', 'assets/sprites/Shovel.json');
+        this.load.atlas('Worm', 'assets/sprites/Worm.png', 'assets/sprites/Worm.json');
+        this.load.atlas('Snail', 'assets/sprites/Snail.png', 'assets/sprites/Snail.json');
         this.load.audio('mySound', 'assets/Sounds.mp3');
 
     }
 
     create() {
         // add title screen text
-        let title01 = this.add.bitmapText(centerX, game.config.height/10, '8-bit', 'Dig Champs', 64).setOrigin(0.5).setTint(0xe28e18);
+        let title01 = this.add.bitmapText(centerX, game.config.height/10, '8-bit', 'DIG CHAMPS', 100).setOrigin(0.5).setTint(0xe28e18);
         const player =this.add.sprite(centerX, centerY, 'player_1', 'Shovel-idle 1', 100);
         const Snail =this.add.sprite(centerX + textSpacer*2.3, centerY, 'Snail', 'Snail', 100);
         const Worm =this.add.sprite(centerX - textSpacer*2, centerY - 30, 'Worm', 'Worm', 100);
-        let start = this.add.bitmapText(centerX, centerY + textSpacer*3, '8-bit', '^ to start/ -> to Guide', 20).setOrigin(0.5);
-        this.add.bitmapText(centerX, h - textSpacer, '8-bit', 'Bryon Anderson 2023', 16).setOrigin(0.5);
+        let start = this.add.bitmapText(centerX, centerY + textSpacer*3, '8-bit', '^ to start/  v to Guide', 32).setOrigin(0.5);
+        this.add.bitmapText(centerX, h - textSpacer, '8-bit', 'Bryon Anderson 2023', 20).setOrigin(0.5);
 
         const sfx = this.sound.add('mySound');
         sfx.setLoop(true);
@@ -82,7 +82,7 @@ class Title extends Phaser.Scene {
             this.scene.start('playScene');
         }
 
-        if (cursors.right.isDown) {
+        if (cursors.down.isDown) {
             // start next scene
             this.scene.start('guideScene');
         }

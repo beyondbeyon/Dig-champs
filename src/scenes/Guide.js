@@ -18,7 +18,7 @@ class Guide extends Phaser.Scene {
         this.add.bitmapText(centerX- textSpacer, centerY + textSpacer*3, '8-bit', 'Avoid them, or fight back by pressing the "B" key', 17).setOrigin(0.5);
        
         
-        this.add.bitmapText(centerX, h - textSpacer, '8-bit', 'Left arrow to menu/ Up arrow to play/ down arrow to credits', 16).setOrigin(0.5);
+        this.add.bitmapText(centerX, h - textSpacer, '8-bit', 'Left arrow to play/ ^ to menu/ v to credits', 16).setOrigin(0.5);
         
 
         // set up cursor keys
@@ -28,12 +28,12 @@ class Guide extends Phaser.Scene {
     update() {
 
         // check for UP input
-        if (Phaser.Input.Keyboard.JustDown(cursors.up)) {
+        if (Phaser.Input.Keyboard.JustDown(cursors.left)) {
             // start play scene
             this.scene.start('playScene');
         }
 
-        if (Phaser.Input.Keyboard.JustDown(cursors.left)) {
+        if (Phaser.Input.Keyboard.JustDown(cursors.up)) {
             // back to menu scene
             this.scene.start('titleScene');
         }

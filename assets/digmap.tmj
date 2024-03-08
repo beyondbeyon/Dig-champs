@@ -118,7 +118,7 @@
          "name":"background",
          "opacity":1,
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":70,
          "x":0,
          "y":0
@@ -598,7 +598,7 @@
                 {
                  "height":0,
                  "id":10,
-                 "name":"spawn",
+                 "name":"",
                  "point":true,
                  "rotation":0,
                  "type":"",

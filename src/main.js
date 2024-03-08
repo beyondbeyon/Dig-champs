@@ -37,4 +37,4 @@ let level;
 let highScore;
 let newHighScore = false;
 let cursors;
-let keySpace;
+let KeySpace;
