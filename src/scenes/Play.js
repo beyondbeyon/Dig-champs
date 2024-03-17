@@ -56,6 +56,8 @@ class Play extends Phaser.Scene {
         const pSpawn = map.findObject("player spawn", obj => obj.name === "spawn")
         const sSpawn = map.findObject("snail spawn", obj => obj.name === "")
         const nSpawn = map.filterObjects("worm spawn", obj => obj.name === "")
+
+        
         //creates player charcter
         this.p = this.physics.add.sprite(pSpawn.x, pSpawn.y, 'player_1', 'Shovel-idle 1');
         this.p.setScale(2)
@@ -84,7 +86,7 @@ class Play extends Phaser.Scene {
         //this.physics.world.enable(this.worms, Phaser.Physics.Arcade.DYNAMIC_BODY)
         this.physics.world.enable(this.snails, Phaser.Physics.Arcade.DYNAMIC_BODY)
         this.worms.map((worm) => {
-            //worm = new Worm(this, nSpawn.x, nSpawn.y ,'Worm', 0)
+            worm = new Worm(this, nSpawn.x, nSpawn.y ,'Worm', 0)
             this.worm = worm
             //this.Creep(worm)
             //worm.body.setVelocityX(20)
