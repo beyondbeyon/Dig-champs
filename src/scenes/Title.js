@@ -22,9 +22,9 @@ class Title extends Phaser.Scene {
         let start = this.add.bitmapText(centerX, centerY + textSpacer*3, '8-bit', '^ to start/  v to Guide', 32).setOrigin(0.5);
         this.add.bitmapText(centerX, h - textSpacer, '8-bit', 'Bryon Anderson 2023', 20).setOrigin(0.5);
 
-        const sfx = this.sound.add('mySound');
-        sfx.setLoop(true);
-        sfx.play()
+        this.sfx = this.sound.add('mySound');
+        this.sfx.setLoop(true);
+        this.sfx.play()
 
         const fx1 = title01.postFX.addGlow(0xf6f8af, 0, 0, false, 0.1, 24);
         player.setDisplaySize(300,300)
@@ -80,11 +80,15 @@ class Title extends Phaser.Scene {
         if (Phaser.Input.Keyboard.JustDown(cursors.up)) {
             // start next scene
             this.scene.start('playScene');
+            this.sfx.setLoop(false);
+            this.sfx.stop()
         }
 
         if (cursors.down.isDown) {
             // start next scene
             this.scene.start('guideScene');
+            this.sfx.setLoop(false);
+            this.sfx.stop()
         }
     }
 }
