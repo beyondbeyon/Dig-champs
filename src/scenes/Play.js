@@ -17,6 +17,10 @@ class Play extends Phaser.Scene {
     preload() {
         this.load.image('tiles', 'assets/tiles/Assets/Assets.png');
         this.load.image('clouds','assets/Assets/Background_2.png')
+        this.load.image('inv','assets/invisible.png')
+        this.load.audio('dig', 'assets/audio/dig.wav')
+        this.load.audio('cave', 'assets/audio/caveatmo.wav')
+        this.load.audio('step', 'assets/audio/step.mp3')
         this.load.tilemapTiledJSON('map', 'assets/digmap.json');
         this.load.atlas('player_2', 'assets/sprites/Pickaxe.png' ,'assets/sprites/Pickaxe.json',{
             frameWidth: 33,
@@ -34,7 +38,15 @@ class Play extends Phaser.Scene {
         const map = this.make.tilemap({ key:'map'});
         const tileset = map.addTilesetImage('Assets', 'tiles')
 
-        
+        this.dig = this.sound.add('dig');
+        //this.dig.setLoop(true);
+
+        this.step = this.sound.add('step');
+        this.step.setLoop(true);
+
+        this.cave = this.sound.add('cave');
+        this.cave.setLoop(true);
+        this.cave.play()
         
 
         map.createLayer('background', tileset,0, 0);
@@ -54,7 +66,8 @@ class Play extends Phaser.Scene {
         })
 
         const pSpawn = map.findObject("player spawn", obj => obj.name === "spawn")
-        const sSpawn = map.findObject("snail spawn", obj => obj.name === "")
+        this.win = map.findObject("win-point", obj => obj.name === "")
+        const sSpawn = map.filterObjects("snail spawn", obj => obj.name === "")
         const nSpawn = map.filterObjects("worm spawn", obj => obj.name === "")
 
         
@@ -68,46 +81,37 @@ class Play extends Phaser.Scene {
 
         //this.snail =this.physics.add.sprite(sSpawn.x, sSpawn.y, 'Snail', 'Snail', 100);
         this.worms = map.createFromObjects("worm spawn",{
-            //classType: Worm,
             name: '',
-            key: 'Worm',
-        })
+            key: 'inv',
+            //classType: Worm,
+        },this)
         this.snails = map.createFromObjects("snail spawn",{
             name: '',
-            key: 'Snail'
-        })
+            key: 'inv',
+            //classType: Snail,
+        },this)
         this.wormGroup = this.add.group(this.worms)
+        this.snailGroup = this.add.group(this.snails)
         this.wormGroup.children.iterate(function (child) {
+            child = new Worm(this, child.x, child.y - 10 , 'Worm', 0)
+            this.wormFSM.step()
+            this.physics.add.collider(child, this.level)
+            this.physics.add.overlap(this.p, child, (obj1, obj2) => {
+                obj2.destroy() // remove coin on overlap
+                this.wormFSM.transition('Death')
+            })
+        }, this)
 
-            child = new Worm(this, child.x, child.y, 'Worm', 0)
+        this.snailGroup.children.iterate(function (child) {
+            child = new Snail(this, child.x, child.y - 10 , 'Snail', 0)
+            this.snailFSM.step()
+            this.physics.add.collider(child, this.level)
+            this.physics.add.overlap(this.p, child, (obj1, obj2) => {
+                obj2.destroy() // remove coin on overlap
+                this.snailFSM.transition('Death')
+            })
+        }, this)
         
-        });
-        //this.worm = new Worm(this, 'Worm', 0)
-        //this.physics.world.enable(this.worms, Phaser.Physics.Arcade.DYNAMIC_BODY)
-        this.physics.world.enable(this.snails, Phaser.Physics.Arcade.DYNAMIC_BODY)
-        this.worms.map((worm) => {
-            worm = new Worm(this, nSpawn.x, nSpawn.y ,'Worm', 0)
-            this.worm = worm
-            //this.Creep(worm)
-            //worm.body.setVelocityX(20)
-            //console.log(this)
-            if(Phaser.Math.Distance.BetweenPoints({x:worm.x, y: worm.y},{x:this.p.x, y:this.p.y}) < 100 ){
-                //this.follow(this.worm)
-                //this.worm.setVelocityX(this.worm - this.p)
-                console.log('poink')
-            }
-            this.physics.add.collider(worm, this.level)
-            //worm.body.setVelocityX(20)
-            //this.physics.moveToObject(worm, this.p, 500)
-        })
-        this.snails.map((snail) => {
-            //worm = new Worm(this, nSpawn.x, nSpawn.y ,'Worm', 0)
-            //console.log(this)
-            this.physics.add.collider(snail, this.level)
-            //this.physics.moveToObject(worm, this.p, 500)
-        })
-        
-
         this.load.atlas('player_1', 'assets/Shovel.png', 'assets/Shovel.json');
 
         this.anims.create({
@@ -171,27 +175,32 @@ class Play extends Phaser.Scene {
         this.direction = new Phaser.Math.Vector2(0)
         this.wrapScreen()
         this.wormFSM.step()
-        if(Phaser.Math.Distance.BetweenPoints({x:this.worm.x, y: this.worm.x},{x:this.p.x, y:this.p.y}) < 100 && this.worm.body.speed > 0){
-            //this.follow(this.worm)
-            //this.worm.setVelocityX(this.worm - this.p)
-            console.log('poink')
-        }
+        this.snailFSM.step()
+        console.log(this.p.y)
+        
+        this.wormGroup.children.iterate(function (child) {
+            //this.wormFSM.transition('Right')
+        },this)
         if(cursors.left.isDown) {
             this.p.anims.play('run', true)
             //this.direction.x = -8
             this.p.body.setAccelerationX(-this.ACCELERATION * 20)
             this.p.setFlip(true, false)
+           //this.step.play()
         } else if(cursors.right.isDown) {
             //this.direction.x = 8
             this.p.body.setAccelerationX(this.ACCELERATION * 20)
             this.p.anims.play('run', true)
             this.p.resetFlip()
+            //this.step.play()
           
         }else {
             // set acceleration to 0 so DRAG will take over
             //this.p.play('idle')
             this.p.body.setAccelerationX(0)
             this.p.body.setDragX(this.DRAG)
+            this.step.stop()
+            //this.dig.stop()
         }
         if(cursors.up.isDown){ //&& this.p.body.blocked.down){
             this.direction.y = -this.ACCELERATION
@@ -201,12 +210,18 @@ class Play extends Phaser.Scene {
             this.p.body.setAccelerationX(this.ACCELERATION)
             this.p.anims.play('dig', true)
             this.p.body.checkCollision.down = false
+            this.dig.play()
         
         } else if(!cursors.down.isDown){
             this.p.body.checkCollision.down = true
         } 
-        if(Phaser.Input.Keyboard.JustDown(KeyB)) {
+        if(Phaser.Input.Keyboard.JustDown(KeySpace)) {
             this.p.anims.play('attack', true)
+        }
+
+        if(this.p.x >= 2176.9999999999973 && this.p.y >= 3466){
+            this.scene.start('creditScene');
+            console.log("end")
         }
         
         this.direction.normalize()
@@ -248,6 +263,5 @@ class Play extends Phaser.Scene {
         console.log(this)
     }
 
-   
 
 }

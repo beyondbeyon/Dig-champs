@@ -1,4 +1,4 @@
-class Worm extends Phaser.Physics.Arcade.Sprite {
+class Worm extends Phaser.GameObjects.Sprite {
     constructor(scene,x ,y ,texture, frame){
         super(scene, x ,y ,texture, frame)
         scene.add.existing(this)
@@ -21,25 +21,10 @@ class Worm extends Phaser.Physics.Arcade.Sprite {
         scene.wormFSM = new StateMachine('Left', {
             Left: new MoveLeft(),
             Right: new MoveRight(),
-            chase: new ChaseState(),
+            Death: new DeathState(),
         }, [scene, this])
 
-        this.direction = this.Left
 
-    }
-
-    update(){
-        switch(this.direction){
-            case Left:
-                this.setVelocityX(-20)
-                worm.setFlip(true, false)
-                break
-            
-            case Right:
-                this.setVelocityX(20)
-                worm.setFlip(true, false)
-                break
-        }
     }
     
 }
@@ -57,7 +42,6 @@ class MoveLeft extends State{
         this.moveTime += 1
         if(this.moveTime < 2000){
             this.moveTime += 1
-            console.log(this.stateMachine)
         }
         //worm.setVelocityX(-20)
         if(this.moveTime > 2000){
@@ -69,7 +53,7 @@ class MoveLeft extends State{
 class MoveRight extends State{
     enter(scene, worm){
         this.moveTime = 0
-        worm.setVelocityX(20)
+        worm.body.setVelocityX(20)
         worm.resetFlip()
     }
 
@@ -77,7 +61,6 @@ class MoveRight extends State{
         this.moveTime += 1
         if(this.moveTime < 2000){
             this.moveTime += 1
-            console.log(this.stateMachine)
         }
         //worm.setVelocityX(20)
         if(this.moveTime > 2000){
@@ -95,6 +78,12 @@ class ChaseState extends State{
     follow(worm){
         this.physics.moveToObject(worm, p, this.wormVelocity, 10000)
         console.log(this)
+    }
+}
+
+class DeathState extends State {
+    enter(scene, worm) {
+        worm.destroy()
     }
 }
 

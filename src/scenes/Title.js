@@ -9,7 +9,8 @@ class Title extends Phaser.Scene {
         this.load.atlas('player_1', 'assets/sprites/Shovel.png', 'assets/sprites/Shovel.json');
         this.load.atlas('Worm', 'assets/sprites/Worm.png', 'assets/sprites/Worm.json');
         this.load.atlas('Snail', 'assets/sprites/Snail.png', 'assets/sprites/Snail.json');
-        this.load.audio('mySound', 'assets/Sounds.mp3');
+        this.load.audio('mySound', 'assets/audio/Sounds.mp3');
+        this.load.audio('dig', 'assets/audio/dig.wav')
 
     }
 
@@ -25,6 +26,8 @@ class Title extends Phaser.Scene {
         this.sfx = this.sound.add('mySound');
         this.sfx.setLoop(true);
         this.sfx.play()
+
+        this.dig = this.sound.add('dig');
 
         const fx1 = title01.postFX.addGlow(0xf6f8af, 0, 0, false, 0.1, 24);
         player.setDisplaySize(300,300)
@@ -82,6 +85,7 @@ class Title extends Phaser.Scene {
             this.scene.start('playScene');
             this.sfx.setLoop(false);
             this.sfx.stop()
+            this.dig.play()
         }
 
         if (cursors.down.isDown) {
@@ -89,6 +93,7 @@ class Title extends Phaser.Scene {
             this.scene.start('guideScene');
             this.sfx.setLoop(false);
             this.sfx.stop()
+            this.dig.play()
         }
     }
 }
