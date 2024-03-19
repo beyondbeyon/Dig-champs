@@ -21,7 +21,7 @@ class Title extends Phaser.Scene {
         const Snail =this.add.sprite(centerX + textSpacer*2.3, centerY, 'Snail', 'Snail', 100);
         const Worm =this.add.sprite(centerX - textSpacer*2, centerY - 30, 'Worm', 'Worm', 100);
         let start = this.add.bitmapText(centerX, centerY + textSpacer*3, '8-bit', '^ to start/  v to Guide', 32).setOrigin(0.5);
-        this.add.bitmapText(centerX, h - textSpacer, '8-bit', 'Bryon Anderson 2023', 20).setOrigin(0.5);
+        this.add.bitmapText(centerX, h - textSpacer, '8-bit', 'Bryon Anderson 2024', 20).setOrigin(0.5);
 
         this.sfx = this.sound.add('mySound');
         this.sfx.setLoop(true);
