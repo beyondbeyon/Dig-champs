@@ -21,6 +21,7 @@ class Play extends Phaser.Scene {
         this.load.audio('dig', 'assets/audio/dig.wav')
         this.load.audio('cave', 'assets/audio/caveatmo.wav')
         this.load.audio('step', 'assets/audio/step.mp3')
+        this.load.audio('hurt', 'assets/audio/hurt.mp3')
         this.load.tilemapTiledJSON('map', 'assets/digmap.json');
         this.load.atlas('player_2', 'assets/sprites/Pickaxe.png' ,'assets/sprites/Pickaxe.json',{
             frameWidth: 33,
@@ -39,6 +40,7 @@ class Play extends Phaser.Scene {
         const tileset = map.addTilesetImage('Assets', 'tiles')
 
         this.dig = this.sound.add('dig');
+        this.hurt = this.sound.add('hurt');
         //this.dig.setLoop(true);
 
         this.step = this.sound.add('step');
@@ -99,6 +101,7 @@ class Play extends Phaser.Scene {
             this.physics.add.overlap(this.p, child, (obj1, obj2) => {
                 obj2.destroy() // remove coin on overlap
                 this.wormFSM.transition('Death')
+                this.hurt.play()
             })
         }, this)
 
@@ -109,6 +112,7 @@ class Play extends Phaser.Scene {
             this.physics.add.overlap(this.p, child, (obj1, obj2) => {
                 obj2.destroy() // remove coin on overlap
                 this.snailFSM.transition('Death')
+                this.hurt.play()
             })
         }, this)
         
