@@ -22,6 +22,7 @@ class Play extends Phaser.Scene {
         this.load.audio('cave', 'assets/audio/caveatmo.wav')
         this.load.audio('step', 'assets/audio/step.mp3')
         this.load.audio('hurt', 'assets/audio/hurt.mp3')
+        this.load.audio('over', 'assets/audio/stage-clear.wav')
         this.load.tilemapTiledJSON('map', 'assets/digmap.json');
         this.load.atlas('player_2', 'assets/sprites/Pickaxe.png' ,'assets/sprites/Pickaxe.json',{
             frameWidth: 33,
@@ -41,6 +42,7 @@ class Play extends Phaser.Scene {
 
         this.dig = this.sound.add('dig');
         this.hurt = this.sound.add('hurt');
+        this.over = this.sound.add('over');
         //this.dig.setLoop(true);
 
         this.step = this.sound.add('step');
@@ -224,6 +226,7 @@ class Play extends Phaser.Scene {
         }
 
         if(this.p.x >= 2176.9999999999973 && this.p.y >= 3466){
+            this.over.play()
             this.scene.start('creditScene');
             console.log("end")
         }
